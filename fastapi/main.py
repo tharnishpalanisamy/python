@@ -1,39 +1,19 @@
-from fastapi import FastAPI 
+from fastapi import FastAPI
+from pydantic import BaseModel , Field
 
+app = FastAPI() 
 
-app =  FastAPI() 
+class Product(BaseModel) :
+    name:str = Field(min_length=2) 
+    price : float = Field(gt=0) 
+    quantity : int = Field(ge=1)
 
-@app.get('/') 
-def home():
-    return{
-        'message':'Hello Home'
-    }
-
-@app.get('/about') 
-def get_about():
-    return{
-        'name' : 'tharnish' , 
-        'course' : 'Bsc Computer science with data analytics'
-    }
-
-
-@app.get('/skills') 
-def get_skills():
-    return[
-        'python' , 
-        'cpp' , 
-        'react' , 
-        'fastapi'
-    ] 
-
-@app.get('/status') 
-def get_status():
+@app.put('/products/{product_id}') 
+def update_product(product_id:int ,product:Product, notify:bool = False  ) :
     return {
-        'status' : 'running'
+        'message' : 'updated' , 
+        'product_id' : product_id,
+        'notify' : notify , 
+        'product' : product
     }
 
-@app.get('/users/{user_id}') 
-def get_user(user_id : int ) :
-    return{
-        'user_id' : user_id
-    }
